@@ -1,4 +1,7 @@
-﻿namespace BugTracker.Models
+﻿using IdentityModel;
+using System;
+
+namespace BugTracker.Models
 {
     public class Ticket
     {
@@ -17,6 +20,12 @@
         public string Description { get; set; }
         public TicketType Type { get; set; }
         public TicketStatus Status { get; set; }
+        public DateTime CreatedOn { get; set; }
+
+        public int CreatedByUserId { get; set; }
+        public User CreatedByUser { get; set; }
+        public int AssignedToUserId { get; set; }
+        public User AssignedTo { get; set; }
 
     }
 }
