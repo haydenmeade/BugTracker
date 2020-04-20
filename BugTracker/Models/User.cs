@@ -8,7 +8,6 @@ namespace BugTracker.Models
 {
     public class User:IdentityUser
     {
-        public List<int> ProjectIds { get; set; }
-        public virtual List<Project> Projects { get; set; }
+        public virtual List<ProjectAccess> ProjectAccesses { get; set; } = new List<ProjectAccess>();
     }
 }
