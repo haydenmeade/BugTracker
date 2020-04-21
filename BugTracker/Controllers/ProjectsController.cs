@@ -54,10 +54,11 @@ namespace BugTracker.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,ModifiedOn")] Project project)
+        public async Task<IActionResult> Create([Bind("Id,Name,Description")] Project project)
         {
             if (ModelState.IsValid)
             {
+                project.ModifiedOn = DateTime.Now;
                 _context.Add(project);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -97,6 +98,7 @@ namespace BugTracker.Controllers
             {
                 try
                 {
+                    project.ModifiedOn = DateTime.Now;
                     _context.Update(project);
                     await _context.SaveChangesAsync();
                 }

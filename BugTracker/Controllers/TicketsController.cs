@@ -14,15 +14,22 @@ namespace BugTracker.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public TicketsController(ApplicationDbContext context)
+        //[BindProperty]
+        //public ProjectViewModel ProjectViewModel { get; set; }
+
+        public TicketsController(ApplicationDbContext context, 
+            int projectId)
         {
             _context = context;
         }
 
         // GET: Tickets
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(int projectId)
         {
-            var applicationDbContext = _context.Tickets.Include(t => t.Project);
+            var applicationDbContext =
+                _context.Tickets
+                .Include(t => t.Project)
+                .Where(t => t.ProjectId == projectId);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -46,10 +53,9 @@ namespace BugTracker.Controllers
         }
 
         // GET: Tickets/Create
-        public IActionResult Create()
+        public IActionResult Create(int projectId)
         {
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name");
-            return View();
+            return View(projectId);
         }
 
         // POST: Tickets/Create
@@ -57,10 +63,12 @@ namespace BugTracker.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ProjectId,Title,Description,Type,Status,Priority,CreatedOn")] Ticket ticket)
+        public async Task<IActionResult> Create(int projectId, [Bind("Id,Title,Description,Type,Status,Priority")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
+                ticket.ProjectId = projectId;
+                ticket.CreatedOn = DateTime.Now;
                 _context.Add(ticket);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -82,7 +90,6 @@ namespace BugTracker.Controllers
             {
                 return NotFound();
             }
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", ticket.ProjectId);
             return View(ticket);
         }
 
@@ -91,7 +98,7 @@ namespace BugTracker.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProjectId,Title,Description,Type,Status,Priority,CreatedOn")] Ticket ticket)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Description,Type,Status,Priority")] Ticket ticket)
         {
             if (id != ticket.Id)
             {
@@ -118,7 +125,6 @@ namespace BugTracker.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ProjectId"] = new SelectList(_context.Projects, "Id", "Name", ticket.ProjectId);
             return View(ticket);
         }
 
