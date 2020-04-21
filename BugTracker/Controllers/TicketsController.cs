@@ -17,8 +17,7 @@ namespace BugTracker.Controllers
         //[BindProperty]
         //public ProjectViewModel ProjectViewModel { get; set; }
 
-        public TicketsController(ApplicationDbContext context, 
-            int projectId)
+        public TicketsController(ApplicationDbContext context)
         {
             _context = context;
         }

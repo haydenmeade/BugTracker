@@ -31,7 +31,7 @@
     </dl>
 
     <p>@Html.DisplayNameFor(model => model.Tickets)</p>
-    <div class="col-lg-6">@{ Html.RenderAction("_TicketView", Model.Tickets); }</div>
+    @*<div class="col-lg-6">@{ Html.RenderAction("_TicketView", Model.Tickets); }</div>*@
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
